@@ -98,6 +98,12 @@ class SalesforceManager
 
         if (isset($response) && $response->getStatusCode() == 200) {
             return json_decode($response->getContent());
+        } else {
+            $error = json_decode($response->getContent())[0];
+            throw new \Exception(
+                sprintf('Error %s: %s', $error->errorCode, $error->message),
+                $response->getStatusCode()
+            );
         }
     }
 
