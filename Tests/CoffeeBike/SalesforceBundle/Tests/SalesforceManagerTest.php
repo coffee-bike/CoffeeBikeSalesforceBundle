@@ -28,7 +28,6 @@ class SalesforceManagerTest extends \PHPUnit_Framework_TestCase
                     new CurlOptionsHandler(array())
                 )
             ),
-            "<INSTANCE>",
             "<USER>",
             "<PASSWORD>",
             "<TOKEN>",
@@ -43,10 +42,5 @@ class SalesforceManagerTest extends \PHPUnit_Framework_TestCase
 
        $this->assertObjectHasAttribute('Max', $result);
        $this->assertObjectHasAttribute('Remaining', $result);
-    }
-
-    public function testQuery()
-    {
-        print_r($this->sf->findAll(null));
     }
 }

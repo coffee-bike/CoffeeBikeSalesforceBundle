@@ -48,13 +48,33 @@ class SalesforceManager
         );
     }
 
-    public function findAll($model) {
-        return $this->request('query?q=SELECT+*+FROM+Opportunity', 'GET');
+    public function findBy($model, array $fields, array $where = null)
+    {
+        $fields = implode(", ", $fields);
+
+        if ($where) {
+            $strWhere = '';
+            foreach ($where as $key => $value) {
+                $strWhere .= $key . "='" . $value . "'";
+            }
+            $query = sprintf('SELECT %s FROM %s WHERE %s', $fields, $model, $strWhere);
+        } else {
+            $query = sprintf('SELECT %s FROM %s', $fields, $model);
+        }
+
+        return $this->query($query);
     }
 
     public function getApiLimit()
     {
         return $this->request('limits', 'GET')->DailyApiRequests;
+    }
+
+    public function query($query)
+    {
+        $uri = 'query?q='.urlencode($query);
+
+        return $this->request($uri, 'GET');
     }
 
     /**
@@ -85,7 +105,7 @@ class SalesforceManager
     {
         try {
             $response = $this->rest->post(
-                'https://login.salesforce.com/services/oauth2/token',
+                'https://test.salesforce.com/services/oauth2/token',
                 sprintf(
                     'grant_type=password&client_id=%s&client_secret=%s&username=%s&password=%s%s',
                     $this->credentials['client_id'],
