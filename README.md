@@ -1,1 +1,1 @@
-# CoffeeBikeSalesforceBundle
+# CoffeeBikeSalesforceRESTBundle

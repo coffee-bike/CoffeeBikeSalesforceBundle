@@ -1,0 +1,32 @@
+{
+  "name": "coffeebike/salesforce-bundle",
+  "license": "GPL-3.0",
+  "type": "symfony-bundle",
+  "description": "Symfony Bundle for the Salesforce REST API",
+  "homepage": "https://coffee-bike.com",
+  "authors": [
+    {
+      "name": "Jonas Dambacher",
+      "email": "jonas.dambacher@coffee-bike.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": { "CoffeeBike\\SalesforceRESTBundle\\": "" }
+  },
+  "require": {
+    "php": ">=5.5.9",
+    "symfony/framework-bundle": "~2.8|~3.0",
+    "ci/restclientbundle" : "~2.0",
+    "doctrine/orm": "~2.5"
+  },
+  "require-dev": {
+    "symfony/console": "~2.8|~3.0",
+    "symfony/phpunit-bridge": "~2.8|~3.0",
+    "phpunit/phpunit": "4.8.*"
+  },
+  "config": {
+    "platform": {
+      "php": "5.5.9"
+    }
+  }
+}
