@@ -48,6 +48,12 @@ class SalesforceManager
         );
     }
 
+    public function updateRecord($model, $id, array $update) {
+        $uri = sprintf('sobjects/%s/%s', $model, $id);
+
+        return $this->request($uri, 'PATCH', null, $update);
+    }
+
     public function findBy($model, array $fields, array $where = null)
     {
         $fields = implode(", ", $fields);
@@ -90,13 +96,20 @@ class SalesforceManager
     private function request($uri, $method, array $parameters = null, array $payload = null) {
         $session = $this->authenticate();
 
+        $uri = $session->instance_url.'/services/data/v39.0/'.$uri;
+        $header = array(CURLOPT_HTTPHEADER => ['Authorization: '.$session->token_type.' '.$session->access_token]);
+
         switch ($method) {
             case 'GET':
-                $response = $this->rest->get($session->instance_url.'/services/data/v39.0/'.$uri, array(CURLOPT_HTTPHEADER => ['Authorization: '.$session->token_type.' '.$session->access_token]));
+                $response = $this->rest->get($uri, $header);
+                break;
+            case 'PATCH':
+                $header[CURLOPT_HTTPHEADER][] = 'Content-Type: application/json';
+                $response = $this->rest->patch($uri, json_encode($payload), $header);
                 break;
         }
 
-        if (isset($response) && $response->getStatusCode() == 200) {
+        if (isset($response) && ($response->getStatusCode() == 200 || $response->getStatusCode() == 204)) {
             return json_decode($response->getContent());
         } else {
             $error = json_decode($response->getContent())[0];
