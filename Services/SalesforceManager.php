@@ -71,6 +71,11 @@ class SalesforceManager
         return $this->query($query);
     }
 
+    public function find($model, $id)
+    {
+        return $this->request(sprintf('/sobjects/%s/%s', $model, $id), 'GET');
+    }
+
     public function getApiLimit()
     {
         return $this->request('limits', 'GET')->DailyApiRequests;
