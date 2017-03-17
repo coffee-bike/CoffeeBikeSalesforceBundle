@@ -129,7 +129,7 @@ class SalesforceManager
     {
         try {
             $response = $this->rest->post(
-                'https://test.salesforce.com/services/oauth2/token',
+                'https://login.salesforce.com/services/oauth2/token',
                 sprintf(
                     'grant_type=password&client_id=%s&client_secret=%s&username=%s&password=%s%s',
                     $this->credentials['client_id'],
