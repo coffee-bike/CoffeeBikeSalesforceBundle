@@ -98,7 +98,7 @@ class SalesforceManager
      *
      * @return mixed
      */
-    private function request($uri, $method, array $parameters = null, array $payload = null) {
+    public function request($uri, $method, array $parameters = null, array $payload = null) {
         $session = $this->authenticate();
 
         $uri = $session->instance_url.'/services/data/v39.0/'.$uri;
