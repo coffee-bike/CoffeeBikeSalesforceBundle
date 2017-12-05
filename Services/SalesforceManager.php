@@ -78,7 +78,7 @@ class SalesforceManager
 
     public function add($model, $data)
     {
-        return $this->request(sprintf('sobject/%s/', $model), 'POST', null, $data);
+        return $this->request(sprintf('sobject/%sgit ', $model), 'POST', null, $data);
     }
 
     public function getApiLimit()
