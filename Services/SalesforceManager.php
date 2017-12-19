@@ -78,7 +78,7 @@ class SalesforceManager
 
     public function add($model, $data)
     {
-        return $this->request(sprintf('sobject/%s', $model), 'POST', null, $data);
+        return $this->request(sprintf('sobjects/%s', $model), 'POST', null, $data);
     }
 
     public function getApiLimit()
@@ -124,7 +124,7 @@ class SalesforceManager
                 break;
         }
 
-        if (isset($response) && ($response->getStatusCode() == 200 || $response->getStatusCode() == 204)) {
+        if (isset($response) && ($response->getStatusCode() == 200 || $response->getStatusCode() == 204 || $response->getStatusCode() == 201)) {
             return json_decode($response->getContent());
         } else {
             $error = json_decode($response->getContent())[0];
