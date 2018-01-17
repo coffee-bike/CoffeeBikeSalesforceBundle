@@ -76,6 +76,11 @@ class SalesforceManager
         return $this->request(sprintf('sobjects/%s/%s', $model, $id), 'GET');
     }
 
+    public function add($model, $data)
+    {
+        return $this->request(sprintf('sobjects/%s', $model), 'POST', null, $data);
+    }
+
     public function getApiLimit()
     {
         return $this->request('limits', 'GET')->DailyApiRequests;
@@ -112,9 +117,14 @@ class SalesforceManager
                 $header[CURLOPT_HTTPHEADER][] = 'Content-Type: application/json';
                 $response = $this->rest->patch($uri, json_encode($payload), $header);
                 break;
+            case "POST":
+                $header[CURLOPT_HTTPHEADER][] = 'Content-Type: application/json';
+                $header[CURLOPT_POST] = true;
+                $response = $this->rest->post($uri, json_encode($payload), $header);
+                break;
         }
 
-        if (isset($response) && ($response->getStatusCode() == 200 || $response->getStatusCode() == 204)) {
+        if (isset($response) && ($response->getStatusCode() == 200 || $response->getStatusCode() == 204 || $response->getStatusCode() == 201)) {
             return json_decode($response->getContent());
         } else {
             $error = json_decode($response->getContent())[0];
