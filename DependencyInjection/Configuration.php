@@ -28,7 +28,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('coffeebike_salesforce');
+        $rootNode = $treeBuilder->root('coffee_bike_salesforce_rest');
         $rootNode
             ->children()
                 ->scalarNode('username')->isRequired()->end()
