@@ -34,5 +34,11 @@ class CoffeeBikeSalesforceExtension extends Extension
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
+
+        $container->setParameter('coffeebike_salesforce.username', $config['username']);
+        $container->setParameter('coffeebike_salesforce.password', $config['password']);
+        $container->setParameter('coffeebike_salesforce.token', $config['token']);
+        $container->setParameter('coffeebike_salesforce.client_id', $config['client_id']);
+        $container->setParameter('coffeebike_salesforce.client_secret', $config['client_secret']);
     }
 }
