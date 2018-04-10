@@ -15,6 +15,8 @@ namespace CoffeeBike\SalesforceRESTBundle\Services;
 
 use Circle\RestClientBundle\Exceptions\CurlException;
 use Circle\RestClientBundle\Services\RestClient;
+use Circle\RestClientBundle\Services\Curl;
+use Circle\RestClientBundle\Services\CurlOptionsHandler;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 class SalesforceManager
@@ -28,7 +30,6 @@ class SalesforceManager
     /**
      * SalesforceManager constructor.
      *
-     * @param RestClient $restClient
      * @param            $instance
      * @param            $username
      * @param            $password
@@ -36,9 +37,13 @@ class SalesforceManager
      *
      * @internal param RestClient $client
      */
-    public function __construct(RestClient $restClient, $username, $password, $token, $client_id, $client_secret)
+    public function __construct($username, $password, $token, $client_id, $client_secret)
     {
-        $this->rest = $restClient;
+        $this->rest = new RestClient(
+            new Curl(
+                new CurlOptionsHandler()
+            )
+        );
         $this->credentials = array(
             'username' => $username,
             'password' => $password,
