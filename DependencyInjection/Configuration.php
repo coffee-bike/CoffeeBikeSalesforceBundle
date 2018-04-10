@@ -10,7 +10,7 @@
  * @author Jonas Dambacher <jonas.dambacher@coffee-bike.com>
  */
 
-namespace CoffeeBike\CollmexBundle\DependencyInjection;
+namespace CoffeeBike\CoffeeBikeSalesforceRESTBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
