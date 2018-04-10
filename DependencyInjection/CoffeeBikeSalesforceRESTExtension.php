@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\Loader;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class CoffeeBikeSalesforceExtension extends Extension
+class CoffeeBikeSalesforceRESTExtension extends Extension
 {
     /**
      * {@inheritdoc}
