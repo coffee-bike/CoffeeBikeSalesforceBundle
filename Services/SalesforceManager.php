@@ -14,6 +14,8 @@
 namespace CoffeeBike\SalesforceRESTBundle\Services;
 
 use Circle\RestClientBundle\Exceptions\CurlException;
+use Circle\RestClientBundle\Services\Curl;
+use Circle\RestClientBundle\Services\CurlOptionsHandler;
 use Circle\RestClientBundle\Services\RestClient;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
@@ -28,7 +30,6 @@ class SalesforceManager
     /**
      * SalesforceManager constructor.
      *
-     * @param RestClient $restClient
      * @param            $instance
      * @param            $username
      * @param            $password
@@ -36,9 +37,14 @@ class SalesforceManager
      *
      * @internal param RestClient $client
      */
-    public function __construct(RestClient $restClient, $username, $password, $token, $client_id, $client_secret)
+    public function __construct($username, $password, $token, $client_id, $client_secret)
     {
-        $this->rest = $restClient;
+        $this->rest = new RestClient(
+            new Curl(
+                new CurlOptionsHandler(array()
+                )
+            )
+        );
         $this->credentials = array(
             'username' => $username,
             'password' => $password,
@@ -48,7 +54,8 @@ class SalesforceManager
         );
     }
 
-    public function updateRecord($model, $id, array $update) {
+    public function updateRecord($model, $id, array $update)
+    {
         $uri = sprintf('sobjects/%s/%s', $model, $id);
 
         return $this->request($uri, 'PATCH', null, $update);
@@ -88,7 +95,7 @@ class SalesforceManager
 
     public function query($query)
     {
-        $uri = 'query?q='.urlencode($query);
+        $uri = 'query?q=' . urlencode($query);
 
         return $this->request($uri, 'GET');
     }
@@ -103,11 +110,12 @@ class SalesforceManager
      *
      * @return mixed
      */
-    public function request($uri, $method, array $parameters = null, array $payload = null) {
+    public function request($uri, $method, array $parameters = null, array $payload = null)
+    {
         $session = $this->authenticate();
 
-        $uri = $session->instance_url.'/services/data/v39.0/'.$uri;
-        $header = array(CURLOPT_HTTPHEADER => ['Authorization: '.$session->token_type.' '.$session->access_token]);
+        $uri = $session->instance_url . '/services/data/v39.0/' . $uri;
+        $header = array(CURLOPT_HTTPHEADER => ['Authorization: ' . $session->token_type . ' ' . $session->access_token]);
 
         switch ($method) {
             case 'GET':
