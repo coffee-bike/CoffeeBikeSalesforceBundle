@@ -15,7 +15,7 @@
   },
   "require": {
     "php": ">=5.5.9",
-    "symfony/framework-bundle": "~2.8|~3.0",
+    "symfony/framework-bundle": "~2.8|~3.0|~4.1",
     "ci/restclientbundle" : "~2.0",
     "doctrine/orm": "~2.5"
   },
