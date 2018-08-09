@@ -19,6 +19,9 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 class SalesforceManager
 {
+    const AUTHENTICATION_URL = 'https://login.salesforce.com/services/oauth2/token';
+    const SANDBOX_AUTHENTICATION_URL = 'https://test.salesforce.com/services/oauth2/token';
+
     /**
      * @var RestClient
      */
@@ -26,17 +29,20 @@ class SalesforceManager
     private $credentials;
 
     /**
-     * SalesforceManager constructor.
-     *
-     * @param RestClient $restClient
-     * @param            $instance
-     * @param            $username
-     * @param            $password
-     * @param            $token
-     *
-     * @internal param RestClient $client
+     * @var bool
      */
-    public function __construct(RestClient $restClient, $username, $password, $token, $client_id, $client_secret)
+    private $sandbox;
+
+    /**
+     * @param RestClient $restClient
+     * @param $username
+     * @param $password
+     * @param $token
+     * @param $client_id
+     * @param $client_secret
+     * @param bool $sandbox
+     */
+    public function __construct(RestClient $restClient, $username, $password, $token, $client_id, $client_secret, $sandbox = false)
     {
         $this->rest = $restClient;
         $this->credentials = array(
@@ -46,6 +52,7 @@ class SalesforceManager
             'client_id' => $client_id,
             'client_secret' => $client_secret,
         );
+        $this->sandbox = $sandbox;
     }
 
     public function updateRecord($model, $id, array $update) {
@@ -137,9 +144,11 @@ class SalesforceManager
 
     private function authenticate()
     {
+        $url = $this->sandbox ? self::SANDBOX_AUTHENTICATION_URL : self::AUTHENTICATION_URL;
+
         try {
             $response = $this->rest->post(
-                'https://login.salesforce.com/services/oauth2/token',
+                $url,
                 sprintf(
                     'grant_type=password&client_id=%s&client_secret=%s&username=%s&password=%s%s',
                     $this->credentials['client_id'],
