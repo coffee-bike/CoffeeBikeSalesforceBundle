@@ -4,13 +4,13 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="coffeebike.salesforce.manager" class="CoffeeBike\SalesforceRESTBundle\Services\SalesforceManager">
-            <argument type="service" id="circle.restclient" />
-            <argument>%coffeebike_salesforce.username%</argument>
-            <argument>%coffeebike_salesforce.password%</argument>
-            <argument>%coffeebike_salesforce.token%</argument>
-            <argument>%coffeebike_salesforce.client_secret%</argument>
-            <argument>%coffeebike_salesforce.client_id%</argument>
+        <service id="coffeebike.salesforce.manager" class="CoffeeBike\SalesforceRESTBundle\Services\SalesforceManager" public="true">
+            <tag name="coffeebike.salesforce.manager" />
+            <argument>%coffee_bike_salesforce_rest.username%</argument>
+            <argument>%coffee_bike_salesforce_rest.password%</argument>
+            <argument>%coffee_bike_salesforce_rest.token%</argument>
+            <argument>%coffee_bike_salesforce_rest.client_secret%</argument>
+            <argument>%coffee_bike_salesforce_rest.client_id%</argument>
         </service>
     </services>
 </container>

@@ -10,7 +10,7 @@
  * @author Jonas Dambacher <jonas.dambacher@coffee-bike.com>
  */
 
-namespace CoffeeBike\CollmexBundle\DependencyInjection;
+namespace CoffeeBike\SalesforceRESTBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\Loader;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class CoffeeBikeSalesforceExtension extends Extension
+class CoffeeBikeSalesforceRESTExtension extends Extension
 {
     /**
      * {@inheritdoc}
