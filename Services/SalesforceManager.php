@@ -14,6 +14,8 @@
 namespace CoffeeBike\SalesforceRESTBundle\Services;
 
 use Circle\RestClientBundle\Exceptions\CurlException;
+use Circle\RestClientBundle\Services\Curl;
+use Circle\RestClientBundle\Services\CurlOptionsHandler;
 use Circle\RestClientBundle\Services\RestClient;
 use Circle\RestClientBundle\Services\Curl;
 use Circle\RestClientBundle\Services\CurlOptionsHandler;
@@ -41,7 +43,8 @@ class SalesforceManager
     {
         $this->rest = new RestClient(
             new Curl(
-                new CurlOptionsHandler()
+                new CurlOptionsHandler(array()
+                )
             )
         );
         $this->credentials = array(
@@ -53,7 +56,8 @@ class SalesforceManager
         );
     }
 
-    public function updateRecord($model, $id, array $update) {
+    public function updateRecord($model, $id, array $update)
+    {
         $uri = sprintf('sobjects/%s/%s', $model, $id);
 
         return $this->request($uri, 'PATCH', null, $update);
@@ -93,7 +97,7 @@ class SalesforceManager
 
     public function query($query)
     {
-        $uri = 'query?q='.urlencode($query);
+        $uri = 'query?q=' . urlencode($query);
 
         return $this->request($uri, 'GET');
     }
@@ -108,11 +112,12 @@ class SalesforceManager
      *
      * @return mixed
      */
-    public function request($uri, $method, array $parameters = null, array $payload = null) {
+    public function request($uri, $method, array $parameters = null, array $payload = null)
+    {
         $session = $this->authenticate();
 
-        $uri = $session->instance_url.'/services/data/v39.0/'.$uri;
-        $header = array(CURLOPT_HTTPHEADER => ['Authorization: '.$session->token_type.' '.$session->access_token]);
+        $uri = $session->instance_url . '/services/data/v39.0/' . $uri;
+        $header = array(CURLOPT_HTTPHEADER => ['Authorization: ' . $session->token_type . ' ' . $session->access_token]);
 
         switch ($method) {
             case 'GET':
