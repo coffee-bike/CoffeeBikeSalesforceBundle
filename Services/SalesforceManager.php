@@ -17,6 +17,8 @@ use Circle\RestClientBundle\Exceptions\CurlException;
 use Circle\RestClientBundle\Services\Curl;
 use Circle\RestClientBundle\Services\CurlOptionsHandler;
 use Circle\RestClientBundle\Services\RestClient;
+use Circle\RestClientBundle\Services\Curl;
+use Circle\RestClientBundle\Services\CurlOptionsHandler;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 class SalesforceManager
