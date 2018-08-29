@@ -34,5 +34,11 @@ class CoffeeBikeSalesforceRESTExtension extends Extension
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
+
+        $container->setParameter('coffee_bike_salesforce_rest.username', $config['username']);
+        $container->setParameter('coffee_bike_salesforce_rest.password', $config['password']);
+        $container->setParameter('coffee_bike_salesforce_rest.token', $config['token']);
+        $container->setParameter('coffee_bike_salesforce_rest.client_secret', $config['client_secret']);
+        $container->setParameter('coffee_bike_salesforce_rest.client_id', $config['client_id']);
     }
 }
