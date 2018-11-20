@@ -55,6 +55,16 @@ class SalesforceManager
         $this->sandbox = $sandbox;
     }
 
+    public function getAccount($accountId)
+    {
+        $account = $this->request(sprintf('sobjects/Account/%s', $accountId), 'GET');
+
+        $accountObj = new Account();
+        $accountObj->setName($account->Name);
+
+        return $accountObj;
+    }
+
     public function updateRecord($model, $id, array $update) {
         $uri = sprintf('sobjects/%s/%s', $model, $id);
 
