@@ -16,6 +16,7 @@ namespace CoffeeBike\SalesforceRESTBundle\Services;
 use Circle\RestClientBundle\Exceptions\CurlException;
 use Circle\RestClientBundle\Services\RestClient;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use CoffeeBike\SalesforceRESTBundle\Entity\Account;
 
 class SalesforceManager
 {
