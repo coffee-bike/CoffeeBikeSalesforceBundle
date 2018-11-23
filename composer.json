@@ -1,7 +1,6 @@
 {
   "name": "coffeebike/salesforce-bundle",
   "type": "symfony-bundle",
-  "description": "Symfony bundle for voting/rating",
   "description": "Symfony Bundle for the Salesforce REST API",
   "homepage": "https://coffee-bike.com",
   "license": "GPL-3.0",
