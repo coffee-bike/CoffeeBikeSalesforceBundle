@@ -1,15 +1,42 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services
+        http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <parameter key="coffeebike_salesforce.auth.username" />
+        <parameter key="coffeebike_salesforce.auth.password" />
+        <parameter key="coffeebike_salesforce.auth.security_token" />
+        <parameter key="coffeebike_salesforce.auth.client_id" />
+        <parameter key="coffeebike_salesforce.auth.client_secret" />
+        <parameter key="coffeebike_salesforce.api_version" />
+    </parameters>
 
     <services>
-        <service id="coffeebike.salesforce.manager" class="CoffeeBike\SalesforceRESTBundle\Services\SalesforceManager">
-            <argument>%coffee_bike_salesforce_rest.username%</argument>
-            <argument>%coffee_bike_salesforce_rest.password%</argument>
-            <argument>%coffee_bike_salesforce_rest.token%</argument>
-            <argument>%coffee_bike_salesforce_rest.client_secret%</argument>
-            <argument>%coffee_bike_salesforce_rest.client_id%</argument>
+        <service id="coffeebike_salesforce.authentication.authentication_manager" class="CoffeeBike\SalesforceBundle\Authentication\AuthenticationManager">
+            <argument key="$credentials" type="service" id="coffeebike_salesforce.authentication.credentials" />
+        </service>
+
+        <service id="coffeebike_salesforce.authentication.credentials" class="CoffeeBike\SalesforceBundle\Authentication\Credentials">
+            <argument key="$username" type="string">%coffeebike_salesforce.auth.username%</argument>
+            <argument key="$password" type="string">%coffeebike_salesforce.auth.password%</argument>
+            <argument key="$securityToken" type="string">%coffeebike_salesforce.auth.security_token%</argument>
+            <argument key="$clientId" type="string">%coffeebike_salesforce.auth.client_id%</argument>
+            <argument key="$clientSecret" type="string">%coffeebike_salesforce.auth.client_secret%</argument>
+        </service>
+
+        <service id="coffeebike_salesforce.command.invalidate_session_command" class="CoffeeBike\SalesforceBundle\Command\InvalidateSessionCommand">
+            <tag name="console.command" />
+        </service>
+
+        <service id="coffeebike_salesforce.http.salesforce_http_client" class="CoffeeBike\SalesforceBundle\Http\SalesforceHttpClient">
+            <argument key="$authenticationManager" type="service" id="coffeebike_salesforce.authentication.authentication_manager" />
+            <argument key="$apiVersion" type="string">%coffeebike_salesforce.api_version%</argument>
+        </service>
+
+        <service id="coffeebike_salesforce.http.salesforce_manager" class="CoffeeBike\SalesforceBundle\Http\SalesforceManager">
+            <argument key="$salesforceHttpClient" type="service" id="coffeebike_salesforce.http.salesforce_http_client" />
         </service>
     </services>
 </container>

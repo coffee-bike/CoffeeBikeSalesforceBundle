@@ -1,3 +1,1 @@
-# WIP: CoffeeBikeSalesforceRESTBundle
-
-*Still work in progress*
+#CoffeeBike Salesforcebundle
