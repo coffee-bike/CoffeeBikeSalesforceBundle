@@ -9,7 +9,6 @@ use CoffeeBike\SalesforceBundle\Object\Fields\DescriptionTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\FirstNameTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\IndustryTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\JigsawTrait;
-use CoffeeBike\SalesforceBundle\Object\Fields\LastActivityDateTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\LastNameTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\LastReferencedDateTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\LastViewedDateTrait;
@@ -40,7 +39,6 @@ class Account extends AbstractObject
     use FirstNameTrait;
     use IndustryTrait;
     use JigsawTrait;
-    use LastActivityDateTrait;
     use LastNameTrait;
     use LastReferencedDateTrait;
     use LastViewedDateTrait;
@@ -68,13 +66,13 @@ class Account extends AbstractObject
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getWriteProtectedFields(): array
     {
         // todo check write protected fields
         return array_merge(
-            parent::getWriteProtectedFields(),
+            parent::WRITE_PROTECTED_FIELDS,
             []
         );
     }

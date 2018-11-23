@@ -56,13 +56,13 @@ class Task extends AbstractObject
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getWriteProtectedFields(): array
     {
         // todo check write protected fields
         return array_merge(
-            parent::getWriteProtectedFields(),
+            parent::WRITE_PROTECTED_FIELDS,
             []
         );
     }

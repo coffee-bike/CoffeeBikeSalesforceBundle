@@ -7,6 +7,17 @@ namespace CoffeeBike\SalesforceBundle\Object;
  */
 abstract class AbstractObject
 {
+    const WRITE_PROTECTED_FIELDS = [
+        'CreatedById',
+        'CreatedDate',
+        'Id',
+        'IsDeleted',
+        'LastActivityDate',
+        'LastModifiedById',
+        'LastModifiedDate',
+        'SystemModstamp',
+    ];
+
     /**
      * @var \stdClass
      */
@@ -72,6 +83,11 @@ abstract class AbstractObject
     abstract public function getObjectName(): string;
 
     /**
+     * @return array
+     */
+    abstract public function getWriteProtectedFields(): array;
+
+    /**
      * @param array $writeProtectedFields
      *
      * @return array
@@ -98,23 +114,6 @@ abstract class AbstractObject
         }
 
         return $array;
-    }
-
-    /**
-     * @return array
-     */
-    public function getWriteProtectedFields(): array
-    {
-        return [
-            'CreatedById',
-            'CreatedDate',
-            'Id',
-            'IsDeleted',
-            'LastActivityDate',
-            'LastModifiedById',
-            'LastModifiedDate',
-            'SystemModstamp',
-        ];
     }
 
     /**
