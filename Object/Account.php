@@ -9,6 +9,7 @@ use CoffeeBike\SalesforceBundle\Object\Fields\DescriptionTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\FirstNameTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\IndustryTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\JigsawTrait;
+use CoffeeBike\SalesforceBundle\Object\Fields\LastActivityDateTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\LastNameTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\LastReferencedDateTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\LastViewedDateTrait;
@@ -30,7 +31,7 @@ use CoffeeBike\SalesforceBundle\Object\Fields\WebsiteTrait;
 /**
  * @author Felix Knopp <felix.knopp@coffee-bike.com>
  */
-abstract class Account extends AbstractObject
+class Account extends AbstractObject
 {
     use AccountSourceTrait;
     use BillingTrait;
@@ -39,6 +40,7 @@ abstract class Account extends AbstractObject
     use FirstNameTrait;
     use IndustryTrait;
     use JigsawTrait;
+    use LastActivityDateTrait;
     use LastNameTrait;
     use LastReferencedDateTrait;
     use LastViewedDateTrait;
@@ -76,6 +78,7 @@ abstract class Account extends AbstractObject
                 'BillingAddress',
                 'IsPersonAccount',
                 'JigsawCompanyId',
+                'LastActivityDate',
                 'LastReferencedDate',
                 'LastViewedDate',
                 'MasterRecordId',

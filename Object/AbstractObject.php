@@ -45,11 +45,6 @@ abstract class AbstractObject
     protected $CreatedById;
 
     /**
-     * @var string|null
-     */
-    protected $LastActivityDate;
-
-    /**
      * @var string
      */
     protected $LastModifiedDate;
@@ -195,22 +190,6 @@ abstract class AbstractObject
     public function setCreatedById(string $CreatedById): void
     {
         $this->CreatedById = $CreatedById;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getLastActivityDate(): ?string
-    {
-        return $this->LastActivityDate;
-    }
-
-    /**
-     * @param string|null $LastActivityDate
-     */
-    public function setLastActivityDate(?string $LastActivityDate): void
-    {
-        $this->LastActivityDate = $LastActivityDate;
     }
 
     /**

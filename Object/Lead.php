@@ -4,13 +4,18 @@ namespace CoffeeBike\SalesforceBundle\Object;
 
 use CoffeeBike\SalesforceBundle\Object\Fields\AddressTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\CompanyTrait;
+use CoffeeBike\SalesforceBundle\Object\Fields\CurrencyIsoCodeTrait;
+use CoffeeBike\SalesforceBundle\Object\Fields\DescriptionTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\EmailTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\FaxTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\FirstNameTrait;
+use CoffeeBike\SalesforceBundle\Object\Fields\JigsawTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\LastNameTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\MasterRecordIdTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\MobilePhoneTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\NameTrait;
+use CoffeeBike\SalesforceBundle\Object\Fields\NumberOfEmployeesTrait;
+use CoffeeBike\SalesforceBundle\Object\Fields\OwnerIdTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\PhoneTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\PhotoUrlTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\RecordTypeIdTrait;
@@ -21,17 +26,22 @@ use CoffeeBike\SalesforceBundle\Object\Fields\WebsiteTrait;
 /**
  * @author Felix Knopp <felix.knopp@coffee-bike.com>
  */
-abstract class Lead extends AbstractObject
+class Lead extends AbstractObject
 {
     use AddressTrait;
     use CompanyTrait;
+    use CurrencyIsoCodeTrait;
+    use DescriptionTrait;
     use EmailTrait;
     use FaxTrait;
     use FirstNameTrait;
+    use JigsawTrait;
     use LastNameTrait;
     use MasterRecordIdTrait;
     use MobilePhoneTrait;
     use NameTrait;
+    use NumberOfEmployeesTrait;
+    use OwnerIdTrait;
     use PhoneTrait;
     use PhotoUrlTrait;
     use RecordTypeIdTrait;

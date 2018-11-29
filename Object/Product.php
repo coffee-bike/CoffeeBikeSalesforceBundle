@@ -18,7 +18,7 @@ use CoffeeBike\SalesforceBundle\Object\Fields\RevenueTrait;
 /**
  * @author Felix Knopp <felix.knopp@coffee-bike.com>
  */
-abstract class Product extends AbstractObject
+class Product extends AbstractObject
 {
     use CurrencyIsoCodeTrait;
     use DescriptionTrait;

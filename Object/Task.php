@@ -25,7 +25,7 @@ use CoffeeBike\SalesforceBundle\Object\Fields\WhoIdTrait;
 /**
  * @author Felix Knopp <felix.knopp@coffee-bike.com>
  */
-abstract class Task extends AbstractObject
+class Task extends AbstractObject
 {
     use AccountIdTrait;
     use ActivityDateTrait;

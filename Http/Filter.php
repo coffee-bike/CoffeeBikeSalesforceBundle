@@ -55,7 +55,7 @@ class Filter
      */
     public function getValue(): string
     {
-        return $this->value;
+        return sprintf("'%s'", $this->value);
     }
 
     /**
@@ -66,7 +66,7 @@ class Filter
      */
     public static function equals(string $field, string $value): self
     {
-        return new static($field, '==', $value);
+        return new static($field, '=', $value);
     }
 
     /**
