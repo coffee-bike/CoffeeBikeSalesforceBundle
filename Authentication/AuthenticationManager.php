@@ -18,6 +18,7 @@ class AuthenticationManager
     const SESSION_CACHE = 'coffeebike_salesforce.session';
 
     const AUTHENTICATION_URL = 'https://login.salesforce.com/services/oauth2/token';
+    const AUTHENTICATION_URL_SANDBOX = 'https://test.salesforce.com/services/oauth2/token';
 
     /**
      * @var FilesystemCache
@@ -35,18 +36,25 @@ class AuthenticationManager
     private $httpClient;
 
     /**
+     * @var string
+     */
+    private $sandbox;
+
+    /**
      * @var Serializer
      */
     private $serializer;
 
     /**
      * @param Credentials $credentials
+     * @param bool        $sandbox
      */
-    public function __construct(Credentials $credentials)
+    public function __construct(Credentials $credentials, bool $sandbox)
     {
         $this->cache = new FilesystemCache();
         $this->credentials = $credentials;
         $this->httpClient = new Client();
+        $this->sandbox = $sandbox;
         $this->serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
     }
 
@@ -71,6 +79,10 @@ class AuthenticationManager
             }
         }
 
+        if (true === $this->sandbox) {
+            $session = $this->refresh();
+        }
+
         $this->cache->set(self::SESSION_CACHE, $this->serializer->serialize($session, 'json'));
 
         return $session;
@@ -85,8 +97,10 @@ class AuthenticationManager
      */
     private function refresh(): Session
     {
+        $authenticationUrl = true === $this->sandbox ? self::AUTHENTICATION_URL_SANDBOX : self::AUTHENTICATION_URL;
+
         try {
-            $json = json_decode($this->httpClient->post(self::AUTHENTICATION_URL, [
+            $json = json_decode($this->httpClient->post($authenticationUrl, [
                 RequestOptions::FORM_PARAMS => [
                     'grant_type' => 'password',
                     'username' => $this->credentials->getUsername(),

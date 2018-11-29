@@ -68,7 +68,7 @@ trait PersonTrait
     protected $PersonMailingGeocodeAccuracy;
 
     /**
-     * @var string|null
+     * @var object|null
      */
     protected $PersonMailingAddress;
 
@@ -320,17 +320,17 @@ trait PersonTrait
     }
 
     /**
-     * @return null|string
+     * @return object|null
      */
-    public function getPersonMailingAddress(): ?string
+    public function getPersonMailingAddress(): ?object
     {
         return $this->PersonMailingAddress;
     }
 
     /**
-     * @param null|string $PersonMailingAddress
+     * @param object|null $PersonMailingAddress
      */
-    public function setPersonMailingAddress(?string $PersonMailingAddress): void
+    public function setPersonMailingAddress(?object $PersonMailingAddress): void
     {
         $this->PersonMailingAddress = $PersonMailingAddress;
     }

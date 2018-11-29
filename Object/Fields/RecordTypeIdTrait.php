@@ -8,22 +8,22 @@ namespace CoffeeBike\SalesforceBundle\Object\Fields;
 trait RecordTypeIdTrait
 {
     /**
-     * @var string
+     * @var string|null
      */
     protected $RecordTypeId;
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getRecordTypeId(): string
+    public function getRecordTypeId(): ?string
     {
         return $this->RecordTypeId;
     }
 
     /**
-     * @param string $RecordTypeId
+     * @param string|null $RecordTypeId
      */
-    public function setRecordTypeId(string $RecordTypeId): void
+    public function setRecordTypeId(?string $RecordTypeId): void
     {
         $this->RecordTypeId = $RecordTypeId;
     }

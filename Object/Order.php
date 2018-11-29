@@ -30,7 +30,7 @@ use CoffeeBike\SalesforceBundle\Object\Fields\TypeTrait;
 /**
  * @author Felix Knopp <felix.knopp@coffee-bike.com>
  */
-class Order extends AbstractObject
+abstract class Order extends AbstractObject
 {
     use AccountIdTrait;
     use ActivatedTrait;

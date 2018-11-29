@@ -8,6 +8,7 @@ namespace CoffeeBike\SalesforceBundle\Object;
 abstract class AbstractObject
 {
     const WRITE_PROTECTED_FIELDS = [
+        'attributes',
         'CreatedById',
         'CreatedDate',
         'Id',
@@ -71,7 +72,7 @@ abstract class AbstractObject
     /**
      * @param string $id
      */
-    public function __construct(?string $id)
+    public function __construct(?string $id = null)
     {
         $this->Id = $id;
         $this->unmappedFields = [];

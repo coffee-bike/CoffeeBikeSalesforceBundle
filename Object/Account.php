@@ -30,7 +30,7 @@ use CoffeeBike\SalesforceBundle\Object\Fields\WebsiteTrait;
 /**
  * @author Felix Knopp <felix.knopp@coffee-bike.com>
  */
-class Account extends AbstractObject
+abstract class Account extends AbstractObject
 {
     use AccountSourceTrait;
     use BillingTrait;
@@ -70,10 +70,35 @@ class Account extends AbstractObject
      */
     public function getWriteProtectedFields(): array
     {
-        // todo check write protected fields
-        return array_merge(
+        $protectedFields = array_merge(
             parent::WRITE_PROTECTED_FIELDS,
-            []
+            [
+                'BillingAddress',
+                'IsPersonAccount',
+                'JigsawCompanyId',
+                'LastReferencedDate',
+                'LastViewedDate',
+                'MasterRecordId',
+                'PhotoUrl',
+                'ShippingAddress',
+            ]
         );
+
+        if (false === $this->isPersonAccount()) {
+            $protectedFields = array_merge(
+                $protectedFields,
+                [
+                    'Salutation',
+                    'FirstName',
+                    'LastName',
+                    'PersonContactId',
+                    'PersonLastCUUpdateDate',
+                    'PersonLastCURequestDate',
+                    'PersonMailingAddress',
+                ]
+            );
+        }
+
+        return $protectedFields;
     }
 }

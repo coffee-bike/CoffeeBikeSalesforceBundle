@@ -30,6 +30,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end()
             ->scalarNode('api_version')->isRequired()->end()
+            ->booleanNode('sandbox_mode')->defaultFalse()->end()
         ;
 
         return $builder;

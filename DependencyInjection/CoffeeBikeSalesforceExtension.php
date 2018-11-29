@@ -27,5 +27,6 @@ class CoffeeBikeSalesforceExtension extends Extension
         $container->setParameter('coffeebike_salesforce.auth.client_id', $config['auth']['client_id']);
         $container->setParameter('coffeebike_salesforce.auth.client_secret', $config['auth']['client_secret']);
         $container->setParameter('coffeebike_salesforce.api_version', $config['api_version']);
+        $container->setParameter('coffeebike_salesforce.sandbox_mode', $config['sandbox_mode']);
     }
 }

@@ -32,7 +32,7 @@ use CoffeeBike\SalesforceBundle\Object\Fields\TypeTrait;
 /**
  * @author Felix Knopp <felix.knopp@coffee-bike.com>
  */
-class Opportunity extends AbstractObject
+abstract class Opportunity extends AbstractObject
 {
     use AccountIdTrait;
     use AmountTrait;

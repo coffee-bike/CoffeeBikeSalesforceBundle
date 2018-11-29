@@ -2,15 +2,18 @@
 
 namespace CoffeeBike\SalesforceBundle\Http;
 
+use CoffeeBike\SalesforceBundle\Exception\LastPageReachedException;
 use CoffeeBike\SalesforceBundle\Object\AbstractObject;
+use CoffeeBike\SalesforceBundle\Object\AbstractObjectMapperTrait;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
  * @author Felix Knopp <felix.knopp@coffee-bike.com>
  */
 class SalesforceManager
 {
+    use AbstractObjectMapperTrait;
+
     /**
      * @var SalesforceHttpClient
      */
@@ -22,6 +25,14 @@ class SalesforceManager
     public function __construct(SalesforceHttpClient $salesforceHttpClient)
     {
         $this->salesforceHttpClient = $salesforceHttpClient;
+    }
+
+    /**
+     * @param AbstractObject $object
+     */
+    public function create(AbstractObject $object)
+    {
+        $this->salesforceHttpClient->request(sprintf('sobjects/%s', $object->getObjectName()), Request::METHOD_POST, $object);
     }
 
     /**
@@ -47,29 +58,56 @@ class SalesforceManager
         );
     }
 
-    public function findBy(AbstractObject $object)
+    /**
+     * @param AbstractObject $object
+     * @param array          $filters
+     *
+     * @return FindByResponse
+     */
+    public function findBy(AbstractObject $object, array $filters)
     {
+        $fields = implode(',', array_keys($object->toArray([])));
+
+        $filterString = '';
+        /** @var Filter $filter */
+        foreach ($filters as $key => $filter) {
+            reset($filters);
+            end($filters);
+            $and = $key === key($filters) ? '' : ' AND ';
+
+            $filterString .= sprintf('%s %s %s%s', $filter->getField(), $filter->getOperator(), $filter->getValue(), $and);
+        }
+
+        $query = sprintf('SELECT %s FROM %s', $fields, $object->getObjectName());
+        if (0 !== count($filters)) {
+            $query .= sprintf(' WHERE %s', urlencode($filterString));
+        }
+
+        return FindByResponse::fromResponse(
+            $this->salesforceHttpClient->request(sprintf('query?q=%s', $query), Request::METHOD_GET, $object),
+            get_class($object)
+        );
     }
 
     /**
-     * Compares the API result and populates the AbstractObject.
+     * @param FindByResponse $findByResponse
      *
-     * @param \stdClass      $data
-     * @param AbstractObject $object
+     * @return FindByResponse
+     *
+     * @throws LastPageReachedException
      */
-    private function mapToObject(\stdClass $data, AbstractObject $object): void
+    public function findNextPage(FindByResponse $findByResponse): FindByResponse
     {
-        $propertyAccessor = PropertyAccess::createPropertyAccessor();
-
-        $unmappedFields = [];
-        foreach ($data as $property => $value) {
-            if (true === property_exists($object, $property)) {
-                $propertyAccessor->setValue($object, $property, $value);
-            } else {
-                $unmappedFields[$property] = $value;
-            }
+        if ($findByResponse->isDone()) {
+            throw new LastPageReachedException();
         }
 
-        $propertyAccessor->setValue($object, 'unmappedFields', $unmappedFields);
+        $nextPageId = substr($findByResponse->getNextRecordsUrl(), strrpos($findByResponse->getNextRecordsUrl(), '/') + 1);
+        $objectClass = $findByResponse->getObjectClass();
+
+        return FindByResponse::fromResponse(
+            $this->salesforceHttpClient->request(sprintf('query/%s', $nextPageId), Request::METHOD_GET, new $objectClass()),
+            $objectClass
+        );
     }
 }

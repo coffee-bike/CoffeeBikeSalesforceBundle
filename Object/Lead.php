@@ -21,7 +21,7 @@ use CoffeeBike\SalesforceBundle\Object\Fields\WebsiteTrait;
 /**
  * @author Felix Knopp <felix.knopp@coffee-bike.com>
  */
-class Lead extends AbstractObject
+abstract class Lead extends AbstractObject
 {
     use AddressTrait;
     use CompanyTrait;

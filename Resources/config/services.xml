@@ -16,6 +16,7 @@
     <services>
         <service id="coffeebike_salesforce.authentication.authentication_manager" class="CoffeeBike\SalesforceBundle\Authentication\AuthenticationManager">
             <argument key="$credentials" type="service" id="coffeebike_salesforce.authentication.credentials" />
+            <argument key="$sandbox" type="string">%coffeebike_salesforce.sandbox_mode%</argument>
         </service>
 
         <service id="coffeebike_salesforce.authentication.credentials" class="CoffeeBike\SalesforceBundle\Authentication\Credentials">
