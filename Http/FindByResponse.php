@@ -23,7 +23,7 @@ class FindByResponse
     private $done;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $nextRecordsUrl;
 
@@ -54,9 +54,9 @@ class FindByResponse
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getNextRecordsUrl(): string
+    public function getNextRecordsUrl(): ?string
     {
         return $this->nextRecordsUrl;
     }
