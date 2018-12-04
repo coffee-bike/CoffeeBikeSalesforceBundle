@@ -13,11 +13,6 @@ trait JigsawTrait
     protected $Jigsaw;
 
     /**
-     * @var string|null
-     */
-    protected $JigsawCompanyId;
-
-    /**
      * @return null|string
      */
     public function getJigsaw(): ?string
@@ -31,21 +26,5 @@ trait JigsawTrait
     public function setJigsaw(?string $Jigsaw): void
     {
         $this->Jigsaw = $Jigsaw;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getJigsawCompanyId(): ?string
-    {
-        return $this->JigsawCompanyId;
-    }
-
-    /**
-     * @param null|string $JigsawCompanyId
-     */
-    public function setJigsawCompanyId(?string $JigsawCompanyId): void
-    {
-        $this->JigsawCompanyId = $JigsawCompanyId;
     }
 }

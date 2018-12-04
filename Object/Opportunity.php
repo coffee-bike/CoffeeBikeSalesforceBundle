@@ -74,10 +74,21 @@ class Opportunity extends AbstractObject
      */
     public function getWriteProtectedFields(): array
     {
-        // todo check write protected fields
         return array_merge(
             parent::WRITE_PROTECTED_FIELDS,
-            []
+            [
+                'Fiscal',
+                'FiscalQuarter',
+                'FiscalYear',
+                'ForecastCategory',
+                'HasOpenActivity',
+                'HasOpportunityLineItem',
+                'HasOverdueTask',
+                'IsClosed',
+                'IsWon',
+                'LastReferencedDate',
+                'LastViewedDate',
+            ]
         );
     }
 }

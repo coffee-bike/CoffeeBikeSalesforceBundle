@@ -32,7 +32,8 @@ class SalesforceManager
      */
     public function create(AbstractObject $object)
     {
-        $this->salesforceHttpClient->request(sprintf('sobjects/%s', $object->getObjectName()), Request::METHOD_POST, $object);
+        $response = $this->salesforceHttpClient->request(sprintf('sobjects/%s', $object->getObjectName()), Request::METHOD_POST, $object);
+        $object->setId($response->id);
     }
 
     /**
@@ -66,7 +67,7 @@ class SalesforceManager
      */
     public function findBy(AbstractObject $object, array $filters)
     {
-        $fields = implode(',', array_keys($object->toArray([])));
+        $fields = implode(',', array_keys($object->toArray(['attributes'])));
 
         $filterString = '';
         /** @var Filter $filter */

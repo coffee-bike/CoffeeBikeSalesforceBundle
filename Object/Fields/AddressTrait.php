@@ -50,7 +50,7 @@ trait AddressTrait
     /**
      * @var string|null
      */
-    protected $Addresss;
+    protected $Address;
 
     /**
      * @return string|null
@@ -183,16 +183,16 @@ trait AddressTrait
     /**
      * @return string|null
      */
-    public function getAddresss(): ?string
+    public function getAddress(): ?string
     {
-        return $this->Addresss;
+        return $this->Address;
     }
 
     /**
-     * @param string|null $Addresss
+     * @param string|null $Address
      */
-    public function setAddresss(?string $Addresss): void
+    public function setAddress(?string $Address): void
     {
-        $this->Addresss = $Addresss;
+        $this->Address = $Address;
     }
 }

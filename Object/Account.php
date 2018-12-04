@@ -8,6 +8,7 @@ use CoffeeBike\SalesforceBundle\Object\Fields\CurrencyIsoCodeTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\DescriptionTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\FirstNameTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\IndustryTrait;
+use CoffeeBike\SalesforceBundle\Object\Fields\JigsawCompanyIdTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\JigsawTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\LastActivityDateTrait;
 use CoffeeBike\SalesforceBundle\Object\Fields\LastNameTrait;
@@ -40,6 +41,7 @@ class Account extends AbstractObject
     use FirstNameTrait;
     use IndustryTrait;
     use JigsawTrait;
+    use JigsawCompanyIdTrait;
     use LastActivityDateTrait;
     use LastNameTrait;
     use LastReferencedDateTrait;

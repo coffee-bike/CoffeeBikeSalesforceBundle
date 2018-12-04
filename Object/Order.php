@@ -70,10 +70,17 @@ class Order extends AbstractObject
      */
     public function getWriteProtectedFields(): array
     {
-        // todo check write protected fields
         return array_merge(
             parent::WRITE_PROTECTED_FIELDS,
-            []
+            [
+                'ActivatedById',
+                'ActivatedDate',
+                'LastReferencedDate',
+                'LastViewedDate',
+                'OrderNumber',
+                'StatusCode',
+                'TotalAmount',
+            ]
         );
     }
 }

@@ -4,6 +4,7 @@ namespace CoffeeBike\SalesforceBundle\Http;
 
 use CoffeeBike\SalesforceBundle\Authentication\AuthenticationManager;
 use CoffeeBike\SalesforceBundle\Exception\AuthenticationException;
+use CoffeeBike\SalesforceBundle\Exception\BadRequestException;
 use CoffeeBike\SalesforceBundle\Exception\ObjectNotFoundException;
 use CoffeeBike\SalesforceBundle\Object\AbstractObject;
 use GuzzleHttp\Client;
@@ -72,6 +73,7 @@ class SalesforceHttpClient
         } catch (ClientException $exception) {
             switch ($exception->getCode()) {
                 case 404: throw ObjectNotFoundException::fromAbstractObject($object);
+                case 400: throw BadRequestException::fromResponse($exception->getResponse());
                 default: throw $exception;
             }
         }
