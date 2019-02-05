@@ -26,6 +26,7 @@ class SalesforceManager
      */
     private $rest;
     private $credentials;
+    private $session;
 
     /**
      * SalesforceManager constructor.
@@ -112,10 +113,12 @@ class SalesforceManager
      */
     public function request($uri, $method, array $parameters = null, array $payload = null)
     {
-        $session = $this->authenticate();
+        if ($this->session == null) {
+            $this->session = $this->authenticate();
+        }
 
-        $uri = $session->instance_url . '/services/data/v39.0/' . $uri;
-        $header = array(CURLOPT_HTTPHEADER => ['Authorization: ' . $session->token_type . ' ' . $session->access_token]);
+        $uri = $this->session->instance_url . '/services/data/v39.0/' . $uri;
+        $header = array(CURLOPT_HTTPHEADER => ['Authorization: ' . $this->session->token_type . ' ' . $this->session->access_token]);
 
         switch ($method) {
             case 'GET':
