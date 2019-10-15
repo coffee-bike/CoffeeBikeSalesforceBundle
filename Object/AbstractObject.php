@@ -96,6 +96,10 @@ abstract class AbstractObject
                 continue;
             }
 
+            if ($value === NULL) {
+                continue;
+            }
+
             if ('unmappedFields' === $property) {
                 foreach ($value as $unmappedProperty => $unmappedValue) {
                     if (true === in_array($unmappedProperty, $writeProtectedFields)) {
