@@ -89,6 +89,11 @@ class SalesforceManager
         return $this->request(sprintf('sobjects/%s', $model), 'POST', null, $data);
     }
 
+    public function addBatch($model, array $data)
+    {
+        return $this->sendBatch(sprintf($model), 'POST', null, $data);
+    }
+
     public function getApiLimit()
     {
         return $this->request('limits', 'GET')->DailyApiRequests;
@@ -174,4 +179,73 @@ class SalesforceManager
         }
 
     }
+
+    /**
+     * Sends a request to salesforce
+     * Provided are the URI, method, parameters and the payload
+     * the payload needs to have the following structure:
+     *  {
+     * "attributes":{
+     * "type":"Case",
+     * "referenceId":"ref1"
+     * },
+     * "OwnerId":"0050Y000000V0u4",
+     * "Type":"Ticket",
+     * "Origin":"Ticket",
+     * "AccountId":"0010Y00000M5zgDQAR",
+     * "Description":"efis.coffee-bike.com\/support\/ticket\/516\/show",
+     * "Subject":"Text"
+     * },
+     * {
+     * "attributes":{
+     * "type":"Case",
+     * "referenceId":"ref2"
+     * },
+     * "OwnerId":"0050Y000000V0u4",
+     * "Type":"Ticket",
+     * "Origin":"Ticket",
+     * "AccountId":"0010Y00000M5zkKQAR",
+     * "Description":"efis.coffee-bike.com\/support\/ticket\/517\/show",
+     * "Subject":"Text"
+     * }
+     *  important is that the attributes (type AND referenceId necessary)
+     *
+     *
+     * @param            $uri
+     * @param            $method
+     * @param array|null $parameters
+     * @param array|null $payload
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    private function sendBatch($uri, $method, array $parameters = null, array $payload = null)
+    {
+        if ($this->session == null) {
+            $this->session = $this->authenticate();
+        }
+        $uri = $this->session->instance_url . '/services/data/v39.0/composite/tree/'.$uri;
+
+        $header = array(CURLOPT_HTTPHEADER => ['Authorization: ' . $this->session->token_type . ' ' . $this->session->access_token]);
+
+        $header[CURLOPT_HTTPHEADER][] = 'Content-Type: application/json';
+        $header[CURLOPT_POST] = true;
+
+        $encodedPayload = substr_replace(json_encode($payload), "{\"records\":", 0,0);
+        $encodedPayload .= "}";
+
+        $response = $this->rest->post($uri, $encodedPayload, $header);
+
+        if (isset($response) && ($response->getStatusCode() == 200 || $response->getStatusCode() == 204 || $response->getStatusCode() == 201)) {
+            return json_decode($response->getContent());
+        } else {
+            $error = json_decode($response->getContent())[0];
+            throw new \Exception(
+                sprintf('Error %s: %s', $error->errorCode, $error->message),
+                $response->getStatusCode()
+            );
+        }
+    }
+}
+
 }
