@@ -88,6 +88,11 @@ class SalesforceManager
     {
         return $this->request(sprintf('sobjects/%s', $model), 'POST', null, $data);
     }
+    
+    public function delete($model, $id)
+    {
+        return $this->request(sprintf('sobjects/%s/%s', $model, $id), 'DELETE');
+    }
 
     public function getApiLimit()
     {
@@ -123,6 +128,9 @@ class SalesforceManager
         switch ($method) {
             case 'GET':
                 $response = $this->rest->get($uri, $header);
+                break;
+            case 'DELETE':
+                $response = $this->rest->delete($uri, $header);
                 break;
             case 'PATCH':
                 $header[CURLOPT_HTTPHEADER][] = 'Content-Type: application/json';
