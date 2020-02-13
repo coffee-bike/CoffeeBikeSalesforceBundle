@@ -10,6 +10,7 @@
             <argument>%coffee_bike_salesforce_rest.token%</argument>
             <argument>%coffee_bike_salesforce_rest.client_secret%</argument>
             <argument>%coffee_bike_salesforce_rest.client_id%</argument>
+            <argument>%coffee_bike_salesforce_rest.sandbox%</argument>
         </service>
     </services>
 </container>

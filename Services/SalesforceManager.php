@@ -38,7 +38,7 @@ class SalesforceManager
      *
      * @internal param RestClient $client
      */
-    public function __construct($username, $password, $token, $client_id, $client_secret)
+    public function __construct($username, $password, $token, $client_id, $client_secret, $sandbox)
     {
         $this->rest = new RestClient(
             new Curl(
@@ -52,6 +52,7 @@ class SalesforceManager
             'token' => $token,
             'client_id' => $client_id,
             'client_secret' => $client_secret,
+            'sandbox' => $sandbox,
         );
     }
 
@@ -156,9 +157,17 @@ class SalesforceManager
 
     private function authenticate()
     {
+        // default url for live salesforce
+        $url = 'https://login.salesforce.com/services/oauth2/token';
+        // Check if Sandbox is set true in credentials
+        if ($this->credentials['sandbox']) {
+            // sandbox url for salesforce
+            $url = 'https://test.salesforce.com/services/oauth2/token';
+        }
+
         try {
             $response = $this->rest->post(
-                'https://login.salesforce.com/services/oauth2/token',
+                $url,
                 sprintf(
                     'grant_type=password&client_id=%s&client_secret=%s&username=%s&password=%s%s',
                     $this->credentials['client_id'],

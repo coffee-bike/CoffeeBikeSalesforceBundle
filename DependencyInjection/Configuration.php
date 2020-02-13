@@ -36,6 +36,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('token')->isRequired()->end()
                 ->scalarNode('client_secret')->isRequired()->end()
                 ->scalarNode('client_id')->isRequired()->end()
+                ->scalarNode('sandbox')->defaultValue(0)->end()
                 ->scalarNode('logging')->defaultValue('%kernel.debug%')->end()
             ->end()
             ->end();

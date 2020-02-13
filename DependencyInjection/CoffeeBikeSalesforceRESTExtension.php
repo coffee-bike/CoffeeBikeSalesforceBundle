@@ -40,5 +40,6 @@ class CoffeeBikeSalesforceRESTExtension extends Extension
         $container->setParameter('coffee_bike_salesforce_rest.token', $config['token']);
         $container->setParameter('coffee_bike_salesforce_rest.client_secret', $config['client_secret']);
         $container->setParameter('coffee_bike_salesforce_rest.client_id', $config['client_id']);
+        $container->setParameter('coffee_bike_salesforce_rest.sandbox', $config['sandbox']);
     }
 }
