@@ -179,6 +179,36 @@ class SalesforceManager
         }
 
     }
+    /**
+     * Requests recursively the wanted resource
+     *
+     * @param $uri
+     * @param $method
+     * @param null $parameters
+     * @param array|null $payload
+     */
+    public function queryAll($uri, $method, $parameters = null, array $payload = null, $initial = true, $resultOfAll = NULL) {
+        // If Initial
+        if ($initial) {
+            // Make a query, since this is based from a query
+            $resultOfAll = array();
+            $result = $this->query($uri, 'GET');
+        } else {
+            // ELSE make a regular request
+            $result = $this->request($uri, $method, $parameters, $payload);
+        }
+        if (isset($result->nextRecordsUrl)) {
+            $urlArray = explode('/',$result->nextRecordsUrl);
+            $nextRecordsQuery = "query/" . $urlArray[sizeof($urlArray) - 1];
+            // GET NEXT RECORDS RECURSIVELY
+            $res = $this->queryAll($nextRecordsQuery, $method, $parameters,$payload, false, $resultOfAll);
+            $resultOfAll = array_merge($res, $result->records);
+        } else {
+            $resultOfAll = $result->records;
+        }
+        // Return the array
+        return $resultOfAll;
+    }
 
     /**
      * Sends a request to salesforce
@@ -246,6 +276,5 @@ class SalesforceManager
             );
         }
     }
-}
 
 }
