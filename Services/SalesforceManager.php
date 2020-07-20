@@ -95,6 +95,11 @@ class SalesforceManager
         return $this->request(sprintf('sobjects/%s/%s', $model, $id), 'DELETE');
     }
 
+    public function addBatch($model, array $data)
+    {
+        return $this->sendBatch(sprintf($model), 'POST', null, $data);
+    }
+
     public function getApiLimit()
     {
         return $this->request('limits', 'GET')->DailyApiRequests;
@@ -191,4 +196,102 @@ class SalesforceManager
         }
 
     }
+    /**
+     * Requests recursively the wanted resource
+     *
+     * @param $uri
+     * @param $method
+     * @param null $parameters
+     * @param array|null $payload
+     */
+    public function queryAll($uri, $method, $parameters = null, array $payload = null, $initial = true, $resultOfAll = NULL) {
+        // If Initial
+        if ($initial) {
+            // Make a query, since this is based from a query
+            $resultOfAll = array();
+            $result = $this->query($uri, 'GET');
+        } else {
+            // ELSE make a regular request
+            $result = $this->request($uri, $method, $parameters, $payload);
+        }
+        if (isset($result->nextRecordsUrl)) {
+            $urlArray = explode('/',$result->nextRecordsUrl);
+            $nextRecordsQuery = "query/" . $urlArray[sizeof($urlArray) - 1];
+            // GET NEXT RECORDS RECURSIVELY
+            $res = $this->queryAll($nextRecordsQuery, $method, $parameters,$payload, false, $resultOfAll);
+            $resultOfAll = array_merge($res, $result->records);
+        } else {
+            $resultOfAll = $result->records;
+        }
+        // Return the array
+        return $resultOfAll;
+    }
+
+    /**
+     * Sends a request to salesforce
+     * Provided are the URI, method, parameters and the payload
+     * the payload needs to have the following structure:
+     *  {
+     * "attributes":{
+     * "type":"Case",
+     * "referenceId":"ref1"
+     * },
+     * "OwnerId":"0050Y000000V0u4",
+     * "Type":"Ticket",
+     * "Origin":"Ticket",
+     * "AccountId":"0010Y00000M5zgDQAR",
+     * "Description":"efis.coffee-bike.com\/support\/ticket\/516\/show",
+     * "Subject":"Text"
+     * },
+     * {
+     * "attributes":{
+     * "type":"Case",
+     * "referenceId":"ref2"
+     * },
+     * "OwnerId":"0050Y000000V0u4",
+     * "Type":"Ticket",
+     * "Origin":"Ticket",
+     * "AccountId":"0010Y00000M5zkKQAR",
+     * "Description":"efis.coffee-bike.com\/support\/ticket\/517\/show",
+     * "Subject":"Text"
+     * }
+     *  important is that the attributes (type AND referenceId necessary)
+     *
+     *
+     * @param            $uri
+     * @param            $method
+     * @param array|null $parameters
+     * @param array|null $payload
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    private function sendBatch($uri, $method, array $parameters = null, array $payload = null)
+    {
+        if ($this->session == null) {
+            $this->session = $this->authenticate();
+        }
+        $uri = $this->session->instance_url . '/services/data/v39.0/composite/tree/'.$uri;
+
+        $header = array(CURLOPT_HTTPHEADER => ['Authorization: ' . $this->session->token_type . ' ' . $this->session->access_token]);
+
+        $header[CURLOPT_HTTPHEADER][] = 'Content-Type: application/json';
+        $header[CURLOPT_POST] = true;
+
+        $encodedPayload = substr_replace(json_encode($payload), "{\"records\":", 0,0);
+        $encodedPayload .= "}";
+
+        $response = $this->rest->post($uri, $encodedPayload, $header);
+
+        if (isset($response) && ($response->getStatusCode() == 200 || $response->getStatusCode() == 204 || $response->getStatusCode() == 201)) {
+            return json_decode($response->getContent());
+        } else {
+            $error = json_decode($response->getContent())[0];
+            throw new \Exception(
+                sprintf('Error %s: %s', $error->errorCode, $error->message),
+                $response->getStatusCode()
+            );
+        }
+    }
+
 }
