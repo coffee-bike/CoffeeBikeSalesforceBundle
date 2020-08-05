@@ -236,11 +236,11 @@ class SalesforceManager
      * "type":"Case",
      * "referenceId":"ref1"
      * },
-     * "OwnerId":"0050Y000000V0u4",
-     * "Type":"Ticket",
-     * "Origin":"Ticket",
-     * "AccountId":"0010Y00000M5zgDQAR",
-     * "Description":"efis.coffee-bike.com\/support\/ticket\/516\/show",
+     * "OwnerId":"ID",
+     * "Type":"TYPE",
+     * "Origin":"ORIGIN",
+     * "AccountId":"ID",
+     * "Description":"DESCRIPTION",
      * "Subject":"Text"
      * },
      * {
@@ -248,11 +248,11 @@ class SalesforceManager
      * "type":"Case",
      * "referenceId":"ref2"
      * },
-     * "OwnerId":"0050Y000000V0u4",
-     * "Type":"Ticket",
-     * "Origin":"Ticket",
-     * "AccountId":"0010Y00000M5zkKQAR",
-     * "Description":"efis.coffee-bike.com\/support\/ticket\/517\/show",
+     * "OwnerId":"ID",
+     * "Type":"TYPE",
+     * "Origin":"ORIGIN",
+     * "AccountId":"ID",
+     * "Description":"DESCRIPTION",
      * "Subject":"Text"
      * }
      *  important is that the attributes (type AND referenceId necessary)
