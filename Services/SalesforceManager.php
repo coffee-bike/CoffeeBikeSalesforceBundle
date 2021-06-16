@@ -17,6 +17,8 @@ use Circle\RestClientBundle\Exceptions\CurlException;
 use Circle\RestClientBundle\Services\Curl;
 use Circle\RestClientBundle\Services\CurlOptionsHandler;
 use Circle\RestClientBundle\Services\RestClient;
+use Circle\RestClientBundle\Services\RestInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 class SalesforceManager
@@ -28,6 +30,9 @@ class SalesforceManager
     private $credentials;
     private $session;
 
+    /** @var LoggerInterface|null */
+    private $logger = NULL;
+
     /**
      * SalesforceManager constructor.
      *
@@ -38,7 +43,7 @@ class SalesforceManager
      *
      * @internal param RestClient $client
      */
-    public function __construct($username, $password, $token, $client_id, $client_secret, $sandbox)
+    public function __construct($username, $password, $token, $client_id, $client_secret, $sandbox, LoggerInterface $logger = NULL)
     {
         $this->rest = new RestClient(
             new Curl(
@@ -54,6 +59,10 @@ class SalesforceManager
             'client_secret' => $client_secret,
             'sandbox' => $sandbox,
         );
+
+        if (NULL !== $logger) {
+            $this->logger = $logger;
+        }
     }
 
     public function updateRecord($model, $id, array $update)
@@ -149,6 +158,8 @@ class SalesforceManager
                 break;
         }
 
+        $this->log($uri, $method, $header, $payload, $response);
+
         if (isset($response) && ($response->getStatusCode() == 200 || $response->getStatusCode() == 204 || $response->getStatusCode() == 201)) {
             return json_decode($response->getContent());
         } else {
@@ -171,21 +182,26 @@ class SalesforceManager
         }
 
         try {
+            $header = [];
+            $payload = sprintf(
+                "grant_type=password&client_id=%s&client_secret=%s&username=%s&password=%s%s",
+                $this->credentials['client_id'],
+                $this->credentials['client_secret'],
+                $this->credentials['username'],
+                $this->credentials['password'],
+                $this->credentials['token']
+            );
+
             $response = $this->rest->post(
                 $url,
-                sprintf(
-                    'grant_type=password&client_id=%s&client_secret=%s&username=%s&password=%s%s',
-                    $this->credentials['client_id'],
-                    $this->credentials['client_secret'],
-                    $this->credentials['username'],
-                    $this->credentials['password'],
-                    $this->credentials['token']
-                ),
+                $payload,
                 array(CURLOPT_HEADER => true)
             );
         } catch (CurlException $e) {
             throw new AuthenticationException("Couldn't authenticate at Salesforce. Please check your credentials!");
         }
+
+        $this->log($url, "POST", $header, $payload, $response);
 
         if ($response->getStatusCode() == 200) {
             $json = json_decode($response->getContent());
@@ -283,6 +299,8 @@ class SalesforceManager
 
         $response = $this->rest->post($uri, $encodedPayload, $header);
 
+        $this->log($uri, "POST", $header, $encodedPayload, $response);
+
         if (isset($response) && ($response->getStatusCode() == 200 || $response->getStatusCode() == 204 || $response->getStatusCode() == 201)) {
             return json_decode($response->getContent());
         } else {
@@ -290,6 +308,54 @@ class SalesforceManager
             throw new \Exception(
                 sprintf('Error %s: %s', $error->errorCode, $error->message),
                 $response->getStatusCode()
+            );
+        }
+    }
+
+    /**
+     * Reformat the response header array to
+     *
+     * @param \Symfony\Component\HttpFoundation\Response $headers
+     * @return string
+     */
+    private function getResponseHeaderAsString(\Symfony\Component\HttpFoundation\Response $response): string
+    {
+        $return = "";
+
+        if (empty($response->headers)) {
+            return $return;
+        }
+
+        foreach ($response->headers->all() as $headerKey => $headerValues) {
+            $return .= sprintf("%s: %s\n", $headerKey, join("; ", $headerValues));
+        }
+
+        return $return;
+    }
+
+    /**
+     * Log the request to log file if logger exists
+     *
+     * @param string $uri
+     * @param string $method
+     * @param array $requestHeader
+     * @param string $requestBody
+     * @param \Symfony\Component\HttpFoundation\Response $response
+     */
+    private function log (string $uri, string $method = "GET", array $requestHeader = [], $requestBody = NULL, \Symfony\Component\HttpFoundation\Response $response)
+    {
+        if ($this->logger) {
+            $this->logger->info(
+                sprintf(
+                    "New %s request to: %s\nRequest header:\n%s\nRequest body:\n%s\nResponse Code: %s\nResponse header:\n%s\nResponse body:\n%s",
+                    $method,
+                    $uri,
+                    join("\n", (!empty($requestHeader[CURLOPT_HTTPHEADER]) ? $requestHeader[CURLOPT_HTTPHEADER] : [])),
+                    (is_array($requestBody) ? json_encode($requestBody, JSON_PRETTY_PRINT) : $requestBody),
+                    trim($response->getStatusCode()),
+                    trim($this->getResponseHeaderAsString($response)),
+                    trim(json_encode(json_decode($response->getContent()), JSON_PRETTY_PRINT))
+                )
             );
         }
     }
