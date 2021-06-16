@@ -80,6 +80,12 @@ class SalesforceManager
             $strWhere = '';
             foreach ($where as $key => $value) {
                 $strWhere .= $key . "='" . $value . "'";
+                if (
+                    $value === "true"
+                    or $value === "false"
+                ) {
+                    $strWhere .= $key . "=" .  $value . " ";
+                }
             }
             $query = sprintf('SELECT %s FROM %s WHERE %s', $fields, $model, $strWhere);
         } else {
