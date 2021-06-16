@@ -5,12 +5,14 @@
 
     <services>
         <service id="coffeebike.salesforce.manager" class="CoffeeBike\SalesforceRESTBundle\Services\SalesforceManager">
+            <tag name="monolog.logger" channel="salesforce" />
             <argument>%coffee_bike_salesforce_rest.username%</argument>
             <argument>%coffee_bike_salesforce_rest.password%</argument>
             <argument>%coffee_bike_salesforce_rest.token%</argument>
             <argument>%coffee_bike_salesforce_rest.client_secret%</argument>
             <argument>%coffee_bike_salesforce_rest.client_id%</argument>
             <argument>%coffee_bike_salesforce_rest.sandbox%</argument>
+            <argument key="$logger" type="service" id="logger" />
         </service>
     </services>
 </container>
